@@ -102,7 +102,12 @@ def remove_node_is_connected(graph, assign, i, removed_node):
     subgraph = graph.subgraph((assign == i).nonzero()[0])
     neighbours = subgraph.neighbors(removed_node)
     subgraph.remove_node(removed_node)
-    return sp.alltrue([len(splength(subgraph, node)) == subgraph.number_of_nodes() for node in neighbours])
+    # return nx.is_connected(subgraph)
+    for node in neighbours:
+        path_lengths_to_node = [l for l in splength(subgraph, node)]
+        if len(path_lengths_to_node) != subgraph.number_of_nodes():
+            return False
+    return True
 
 
 def dG_atom_swap(dm, assign, i, neighbours, G_cur, quick_exit):
